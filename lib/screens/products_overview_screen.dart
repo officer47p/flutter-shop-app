@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/app_drawer.dart';
@@ -5,6 +7,7 @@ import '../widgets/app_drawer.dart';
 import '../screens/cart_screen.dart';
 
 import '../providers/cart.dart';
+import '../providers/products_provider.dart';
 import '../widgets/products_grid.dart';
 import '../widgets/badge.dart';
 import '../enums/filter_options.dart';
@@ -17,6 +20,35 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _showFavoriteProducts = false;
+  bool _isInitializing = true;
+  bool _isLoading = false;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInitializing) {
+      loadResources();
+      _isInitializing = false;
+    }
+    super.didChangeDependencies();
+  }
+
+  Future<void> loadResources() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await Provider.of<Products>(context).fetchAndSetProducts();
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (err) {
+      setState(() {
+        _isLoading = false;
+        print(err);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +92,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductsGrid(_showFavoriteProducts),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsGrid(_showFavoriteProducts),
     );
   }
 }
