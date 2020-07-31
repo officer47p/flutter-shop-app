@@ -66,6 +66,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
+    print("Called the refresh");
     const url = "https://flutter-shop-app-22bfa.firebaseio.com/products.json";
     try {
       final response = await http.get(url);
@@ -114,10 +115,20 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProduct(Product product) {
+  Future<void> updateProduct(Product product) async {
     final productIndex =
         _items.indexWhere((element) => element.id == product.id);
     if (productIndex >= 0) {
+      final url =
+          "https://flutter-shop-app-22bfa.firebaseio.com/products/${product.id}.json";
+
+      await http.patch(url,
+          body: json.encode({
+            "title": product.title,
+            "price": product.price,
+            "description": product.description,
+            "imageUrl": product.imageUrl,
+          }));
       _items[productIndex] = product;
       notifyListeners();
     } else {

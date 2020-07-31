@@ -96,7 +96,23 @@ class _EditProductScreenState extends State<EditProductScreen> {
         });
         Navigator.of(context).pop();
       } else {
-        Provider.of<Products>(context).updateProduct(_editedProduct);
+        try {
+          await Provider.of<Products>(context).updateProduct(_editedProduct);
+        } catch (err) {
+          await showDialog<String>(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("An error accurd"),
+              content: Text("Something went wrong..."),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("OK"),
+                  onPressed: () => Navigator.of(ctx).pop(),
+                )
+              ],
+            ),
+          );
+        }
         setState(() {
           _isLoading = false;
         });
