@@ -136,9 +136,21 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String productId) {
+  Future<void> deleteProduct(String productId) async {
+    final url =
+        "https://flutter-shop-app-22bfa.firebaseio.com/products/${productId}";
+    final existingProductIndex =
+        _items.indexWhere((element) => element.id == productId);
+    var existingProduct = _items[existingProductIndex];
     _items.removeWhere((prod) => prod.id == productId);
     notifyListeners();
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw Exception("Couldn't delete the product.");
+    }
+    existingProduct = null;
   }
 
   // void toggleFavorite(String id) {
