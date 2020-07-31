@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import './product.dart';
 
@@ -64,10 +65,22 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == productId);
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) async {
+    const url = "https://flutter-shop-app-22bfa.firebaseio.com/products.json";
+    final response = await http.post(url,
+        body: json.encode(
+          {
+            "title": product.title,
+            "price": product.price,
+            "description": product.description,
+            "imageUrl": product.imageUrl,
+            "isFavorite": product.isFavorite
+          },
+        ));
+
     _items.add(
       Product(
-        id: DateTime.now().toString(),
+        id: json.decode(response.body)["name"],
         description: product.description,
         title: product.title,
         price: product.price,
