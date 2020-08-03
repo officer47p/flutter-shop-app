@@ -32,6 +32,9 @@ class Orders with ChangeNotifier {
       if (response.statusCode >= 400) {
         throw Exception();
       }
+      if (json.decode(response.body) == null) {
+        return;
+      }
       (json.decode(response.body) as Map<String, dynamic>)
           .forEach((key, value) {
         fetchedOrders.add(OrderItem(

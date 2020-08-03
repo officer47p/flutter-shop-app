@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/app_drawer.dart';
@@ -13,7 +11,7 @@ import '../widgets/badge.dart';
 import '../enums/filter_options.dart';
 
 class ProductsOverviewScreen extends StatefulWidget {
-  static const String routeName = "/";
+  static const String routeName = "/products-overview";
   @override
   _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
 }
@@ -42,6 +40,19 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         _isLoading = false;
       });
     } catch (err) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text("An Error Occurd"),
+          content: Text(err.toString()),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Ok"),
+              onPressed: () => Navigator.of(ctx).pop(),
+            )
+          ],
+        ),
+      );
       setState(() {
         _isLoading = false;
         print(err);

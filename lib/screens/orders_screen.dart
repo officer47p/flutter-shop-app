@@ -57,10 +57,17 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 print("Getting the orders");
                 // final orders = Provider.of<or.Orders>(context).orders;
                 return Consumer<or.Orders>(
-                  builder: (context, value, child) => ListView.builder(
-                    itemCount: value.orders.length,
-                    itemBuilder: (context, i) => OrderItem(value.orders[i]),
-                  ),
+                  builder: (context, value, child) => value.orders.isEmpty
+                      ? Center(
+                          child: Text(
+                          "It's empty",
+                          style: TextStyle(fontSize: 40),
+                        ))
+                      : ListView.builder(
+                          itemCount: value.orders.length,
+                          itemBuilder: (context, i) =>
+                              OrderItem(value.orders[i]),
+                        ),
                 );
                 //     ListView.builder(
                 //   itemBuilder: (ctx, i) {

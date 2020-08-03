@@ -16,19 +16,25 @@ class ProductsGrid extends StatelessWidget {
     // productsData.items.where((element) => element.isFavorite).toList()
 
     print("Rebuild from Products_grid");
-    return GridView.builder(
-      itemCount: products.length,
-      padding: const EdgeInsets.all(10),
-      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-        value: products[i],
-        child: ProductItem(),
-      ),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3 / 2,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 10,
-      ),
-    );
+    return products.isEmpty
+        ? Center(
+            child: Text(
+            "It's empty",
+            style: TextStyle(fontSize: 40),
+          ))
+        : GridView.builder(
+            itemCount: products.length,
+            padding: const EdgeInsets.all(10),
+            itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+              value: products[i],
+              child: ProductItem(),
+            ),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 3 / 2,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 10,
+            ),
+          );
   }
 }

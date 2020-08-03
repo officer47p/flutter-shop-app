@@ -9,6 +9,22 @@ class Auth with ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
 
+  bool get isAuth {
+    print(token);
+    print("The condition: ${token != null}");
+    return token != null;
+  }
+
+  String get token {
+    if (_token != null &&
+        _expiryDate != null &&
+        _expiryDate.isAfter(DateTime.now())) {
+      print("Is authenticated");
+      return _token;
+    }
+    return null;
+  }
+
   Future<void> _authenticate(
       String email, String password, String command) async {
     print("Called Authenticate");
@@ -32,6 +48,11 @@ class Auth with ChangeNotifier {
       if (authData["error"] != null) {
         throw HttpException(authData["error"]["message"]);
       }
+      _token = authData["idToken"];
+      _expiryDate = DateTime.now()
+          .add(Duration(seconds: int.parse(authData["expiresIn"])));
+      _userId = authData["localId"];
+      notifyListeners();
     } catch (err) {
       print(err);
       throw err;
@@ -39,11 +60,11 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signUp(String email, String password) async {
-    await _authenticate(email, password, "signUp");
+    return _authenticate(email, password, "signUp");
   }
 
   Future<void> signIn(String email, String password) async {
-    await _authenticate(email, password, "signInWithPassword");
+    return _authenticate(email, password, "signInWithPassword");
   }
 }
 

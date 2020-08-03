@@ -34,23 +34,36 @@ class MyApp extends StatelessWidget {
           builder: (_) => Auth(),
         )
       ],
-      child: MaterialApp(
-        title: "My Shop",
-        theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.deepOrange,
-          // fontFamily: "Galada",
-          // fontFamily: "Arial",
-        ),
-        initialRoute: AuthScreen.routeName,
-        routes: <String, Widget Function(BuildContext)>{
-          "/": (context) => ProductsOverviewScreen(),
-          AuthScreen.routeName: (ctx) => AuthScreen(),
-          ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-          CartScreen.routeName: (ctx) => CartScreen(),
-          OrdersScreen.routeName: (ctx) => OrdersScreen(),
-          UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
-          EditProductScreen.routeName: (ctx) => EditProductScreen(),
+      child: Consumer<Auth>(
+        builder: (context, auth, _) {
+          print("Rebuilding the whole app");
+          return MaterialApp(
+            title: "My Shop",
+            theme: ThemeData(
+              primarySwatch: Colors.purple,
+              accentColor: Colors.deepOrange,
+            ),
+            home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
+            routes: <String, Widget Function(BuildContext)>{
+              ProductsOverviewScreen.routeName: (context) {
+                print("It's calling builder in init screen");
+                return ProductsOverviewScreen();
+              },
+              AuthScreen.routeName: (ctx) {
+                print("It's calling builder in init screen for auth screen");
+                return AuthScreen();
+              },
+              ProductDetailScreen.routeName: (ctx) {
+                print(
+                    "It's calling builder in init screen for products details screen");
+                return ProductDetailScreen();
+              },
+              CartScreen.routeName: (ctx) => CartScreen(),
+              OrdersScreen.routeName: (ctx) => OrdersScreen(),
+              UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
+              EditProductScreen.routeName: (ctx) => EditProductScreen(),
+            },
+          );
         },
       ),
     );
