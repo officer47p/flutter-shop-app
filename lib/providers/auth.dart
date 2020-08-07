@@ -9,6 +9,10 @@ class Auth with ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
 
+  String get userId {
+    return _userId;
+  }
+
   bool get isAuth {
     print(token);
     print("The condition: ${token != null}");

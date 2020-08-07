@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/product.dart';
 import '../providers/cart.dart';
+import '../providers/auth.dart';
 import '../screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
@@ -10,6 +11,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final scaffold = Scaffold.of(context);
     // final products = Provider.of<Products>(context);
+    final authData = Provider.of<Auth>(context, listen: false);
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context);
     return GestureDetector(
@@ -82,7 +84,10 @@ class ProductItem extends StatelessWidget {
                     ),
                     onTap: () async {
                       try {
-                        await product.toggleFavoriteStatus();
+                        await product.toggleFavoriteStatus(
+                          authData.token,
+                          authData.userId,
+                        );
                       } catch (err) {
                         scaffold.showSnackBar(
                           SnackBar(
