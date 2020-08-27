@@ -70,6 +70,7 @@ class _CartScreenState extends State<CartScreen> {
                                   );
                                   cart.clearCart();
                                 } catch (err) {
+                                  print("Catched errrrrrrrrrr");
                                   await showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -84,6 +85,7 @@ class _CartScreenState extends State<CartScreen> {
                                       ],
                                     ),
                                   );
+                                  print("Catched errrrrrrrrrr after await");
                                 } finally {
                                   setState(() {
                                     _isLoading = false;
